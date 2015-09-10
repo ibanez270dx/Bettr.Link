@@ -1,0 +1,59 @@
+{
+  "name": "Bettr.Link",
+  "version": "0.0.1",
+  "manifest_version": 2,
+  "description": "Shared bookmarks",
+  "homepage_url": "http://humani.se",
+
+  "icons": {
+    "16": "icons/link16.png",
+    "48": "icons/link48.png",
+    "128": "icons/link128.png"
+  },
+
+  "default_locale": "en",
+  "options_page": "views/options/index.html",
+
+  "browser_action": {
+    "default_icon": "icons/link19.png",
+    "default_title": "Bettr.Link"
+  },
+
+  "chrome_url_overrides": {
+    "bookmarks": "views/manager/index.html"
+  },
+
+  "permissions": [
+    "bookmarks",
+    "chrome://favicon/",
+    "notifications",
+    "tabs",
+    "unlimitedStorage",
+    "<all_urls>"
+  ],
+
+  "omnibox": {
+    "keyword": "bettr"
+  },
+
+  "content_scripts": [{
+    "matches": [ "<all_urls>" ],
+    "js": [ "javascripts/jquery-2.1.4.min.js" ]
+  }],
+
+  "background": {
+    "scripts": ["javascripts/event.js"],
+    "persistent": false
+  },
+
+  "web_accessible_resources": [
+    "javascripts/jquery-2.1.4.min.js",
+    "views/sidebar.html",
+    "icons/ionicons.eot",
+    "icons/ionicons.svg",
+    "icons/ionicons.ttf",
+    "icons/ionicons.woff",
+    "stylesheets/sidebar.css",
+    "stylesheets/ionicons.css"
+  ]
+}
