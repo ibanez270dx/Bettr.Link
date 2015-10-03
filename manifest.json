@@ -11,16 +11,9 @@
     "128": "icons/link128.png"
   },
 
-  "default_locale": "en",
-  "options_page": "views/options/index.html",
-
   "browser_action": {
     "default_icon": "icons/link19.png",
     "default_title": "Bettr.Link"
-  },
-
-  "chrome_url_overrides": {
-    "bookmarks": "views/manager/index.html"
   },
 
   "permissions": [
@@ -37,23 +30,20 @@
   },
 
   "content_scripts": [{
-    "matches": [ "<all_urls>" ],
-    "js": [ "javascripts/jquery-2.1.4.min.js" ]
+    "js": [ "javascripts/jquery-2.1.4.min.js" ],
+    "matches": [ "<all_urls>" ]
   }],
 
   "background": {
-    "scripts": ["javascripts/event.js"],
+    "scripts": ["javascripts/background.js"],
     "persistent": false
   },
 
   "web_accessible_resources": [
     "javascripts/jquery-2.1.4.min.js",
-    "views/sidebar.html",
-    "icons/ionicons.eot",
-    "icons/ionicons.svg",
-    "icons/ionicons.ttf",
-    "icons/ionicons.woff",
-    "stylesheets/sidebar.css",
-    "stylesheets/ionicons.css"
+    "javascripts/bettrlink.js",
+    "stylesheets/injected.css",
+    "views/injected.html",
+    "views/index.html"
   ]
 }
