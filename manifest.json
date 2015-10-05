@@ -29,21 +29,17 @@
     "keyword": "bettr"
   },
 
-  "content_scripts": [{
-    "js": [ "javascripts/jquery-2.1.4.min.js" ],
-    "matches": [ "<all_urls>" ]
-  }],
-
   "background": {
     "scripts": ["javascripts/background.js"],
     "persistent": false
   },
 
   "web_accessible_resources": [
-    "javascripts/jquery-2.1.4.min.js",
+    "javascripts/lib/jquery-2.1.4.min.js",
     "javascripts/bettrlink.js",
+    "javascripts/components.js",
     "stylesheets/injected.css",
-    "views/injected.html",
+    "views/components.html",
     "views/index.html"
   ]
 }

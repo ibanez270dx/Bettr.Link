@@ -1,18 +1,21 @@
 
 @BettrLink =
-  appRoot: chrome.extension.getURL('/')
   isActive: false
+  shadowDOM: 'bettrlink-ui::shadow'
 
-  overlay: -> $('#bettrlink-overlay')
-  capture: -> $('#bettrlink-capture')
-  sidebar: -> $('#bettrlink-sidebar')
-  iframe: -> $('#bettrlink-iframe')
+  article: -> $("#{@shadowDOM} article")
+  overlay: -> $("#{@shadowDOM} #overlay")
+  capture: -> $("#{@shadowDOM} #capture")
+  sidebar: -> $("#{@shadowDOM} aside")
+  iframe: -> $("#{@shadowDOM} iframe")
 
-  injectHTML: ->
-    $.get @appRoot+"views/injected.html", (html) =>
-      $('body').append html
-      @iframe().attr 'src', @appRoot+"views/index.html"
-      @toggle()
+  injectComponents: ->
+    # BettrLink Web Component
+    $(document.head).append $('<link>').attr
+      rel: 'import', href: chrome.extension.getURL('views/components.html')
+
+    # Point iFrame
+    @iframe().attr 'src', chrome.extension.getURL('views/index.html')
 
   scrapePageInfo: ->
     page =
@@ -24,33 +27,55 @@
     $('#bettrlink-site-url').text window.location.toString()
 
   open: ->
-    @capture().attr('src', dataUri).velocity(
-      { blur: 6, opacity: 0.4 },
-      { duration: 500, begin: (capture) =>
-        $('html').addClass 'bettrlink-no-scroll'
-        @scrapePageInfo()
-        @overlay().show()
-      })
-    @sidebar().velocity(
-      { translateX: ["0px","400px"] },
-      { duration: 435, easing: [0.175, 0.885, 0.32, 1.275] })
-    @isActive = true
+    chrome.runtime.sendMessage 'captureVisibleTab', (dataURI) =>
+      @overlay().velocity { opacity: 1 }, duration: 500
+
+      @capture().attr('src', dataURI).velocity { blur: 6, opacity: 0.4 },
+        duration: 500, begin: =>
+          @article().show()
+          @scrapePageInfo()
+          $('html').css
+            overflow: 'hidden'
+
+      @sidebar().velocity { translateX: ["0px","400px"], boxShadow: '25px 0px 50px 25px #101115' },
+        duration: 435, easing: [0.175, 0.885, 0.32, 1.275]
+
+      @isActive = true
 
   close: ->
-    @capture().velocity(
-      { blur: 0, opacity: 1 },
-      { duration: 600, complete: =>
-        $('html').removeClass 'bettrlink-no-scroll'
-        @overlay().hide()
-      })
-    @sidebar().velocity(
-      { translateX: ["400px","0px"] },
-      { duration: 500, easing: "ease-out" })
+    @overlay().velocity { opacity: 0 }, duration: 500
+
+    @capture().velocity { blur: 0, opacity: 1 },
+      duration: 600, complete: =>
+        @article().hide()
+        $('html').css
+          overflow: 'initial'
+
+    @sidebar().velocity { translateX: ["400px","0px"], boxShadow: '0px 0px 0px 0px transparent' },
+      duration: 500, easing: "ease-out"
+
     @isActive = false
 
   toggle: ->
-    if @isActive then @close() else @open()
+    if @isActive
+    then @close()
+    else @open()
 
 ####################################################
+#  Listeners
+####################################################
 
-@BettrLink
+document.addEventListener 'BettrLink', (event) =>
+  console.log 'BettrLinkEvent: ', event
+  switch event.detail
+    when "open" then @BettrLink.open()
+
+####################################################
+#  Initialize
+####################################################
+
+initialize = (=>
+  if @jQuery? and @jQuery.Velocity? and @Vibrant?
+  then @BettrLink.injectComponents()
+  else setTimeout 'initialize()', 10
+)()

@@ -1,48 +1,46 @@
 (function() {
-  chrome.browserAction.onClicked.addListener((function(_this) {
-    return function(tab) {
-      return chrome.tabs.captureVisibleTab(null, {
-        format: 'jpeg',
-        quality: 80
-      }, function(dataUri) {
-        return chrome.tabs.executeScript(tab.id, {
-          code: "var dataUri = '" + dataUri + "'"
-        }, function() {
-          return chrome.tabs.executeScript(tab.id, {
-            code: 'window.BettrLink===undefined'
-          }, function(result) {
-            if (!result[0]) {
-              return chrome.tabs.executeScript(null, {
-                code: 'window.BettrLink.toggle()'
-              });
-            } else {
-              chrome.tabs.insertCSS(null, {
-                file: 'stylesheets/injected.css'
-              });
-              return chrome.tabs.executeScript(null, {
-                file: 'javascripts/jquery-2.1.4.min.js'
-              }, function() {
-                return chrome.tabs.executeScript(null, {
-                  file: 'javascripts/velocity.min.js'
-                }, function() {
-                  return chrome.tabs.executeScript(null, {
-                    file: 'javascripts/vibrant.min.js'
-                  }, function() {
-                    return chrome.tabs.executeScript(null, {
-                      file: 'javascripts/bettrlink.js'
-                    }, function() {
-                      return chrome.tabs.executeScript(null, {
-                        code: 'window.BettrLink.injectHTML()'
-                      });
-                    });
-                  });
-                });
-              });
-            }
-          });
+  chrome.browserAction.onClicked.addListener(function(tab) {
+    return chrome.tabs.executeScript(tab.id, {
+      code: 'window.BettrLink===undefined'
+    }, function(result) {
+      if (result[0]) {
+        chrome.tabs.executeScript(null, {
+          file: 'javascripts/lib/jquery-2.1.4.min.js'
         });
-      });
-    };
-  })(this));
+        chrome.tabs.executeScript(null, {
+          file: 'javascripts/lib/velocity.min.js'
+        });
+        chrome.tabs.executeScript(null, {
+          file: 'javascripts/lib/vibrant.min.js'
+        });
+        return chrome.tabs.executeScript(null, {
+          file: 'javascripts/bettrlink.js'
+        });
+      } else {
+        return chrome.tabs.executeScript(null, {
+          code: 'window.BettrLink.toggle()'
+        });
+      }
+    });
+  });
+
+  chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+    console.log("request: ", request);
+    console.log("sender: ", sender);
+    console.log("sendResponse: ", sendResponse);
+    switch (request) {
+      case 'captureVisibleTab':
+        chrome.tabs.captureVisibleTab(null, {
+          format: 'jpeg',
+          quality: 80
+        }, function(dataURI) {
+          return sendResponse(dataURI);
+        });
+        break;
+      case 'openUI':
+        console.log("open it!");
+    }
+    return true;
+  });
 
 }).call(this);
