@@ -1,59 +1,46 @@
 <template>
   <style>
-    article {
-      display: flex;
-      align-items: center;
-      -webkit-backface-visibility: hidden;
-      -webkit-transition: translate3d(0,0,0); }
-    article #overlay {
-      position: fixed;
-      top: 0px; left: 0px; bottom: 0px; right: 0px;
-      z-index: 2147483646;
-      margin: 0px;
-      padding: 0px;
+    /* full-page "details" overlay */
+    section {
+      position: fixed; z-index: 2147483647;
+      top: 0px; right: 0px; bottom: 0px; left: 0px;
       width: 100vw; height: 100vh;
-      background-color: #050505;
+      background: #000;
       opacity: 0; }
-    article #capture {
-      position: relative;
-      z-index: 2147483647;
+    section #capture {
+      position: absolute;
+      top: 0px; right: 0px; bottom: 0px; left: 0px;
       width: 100%; height: 100%;
-      -webkit-backface-visibility: hidden;
-      -webkit-transition: translate3d(0,0,0);
+      opacity: 0.35;
+      -webkit-filter: blur(10px);
+      -webkit-transform: translate3d(0,0,0);
+      transform: translate3d(0,0,0); }
+    section iframe {
+      position: relative;
+      width: 100vw; height: 100vh;
+      background: transparent;
     }
 
+    /* bettr.links sidebar */
     aside {
-      position: fixed;
+      position: fixed; z-index: 2147483648;
       top: 0px; right: -50px; bottom: auto; left: auto;
-      z-index: 2147483648;
       width: 450px; height: 100vh;
       background: #292929;
-      transform: translateX(400px);
-      -webkit-backface-visibility: hidden;
-      -webkit-transition: translate3d(0,0,0); }
+      -webkit-transform: translateX(400px);
+      transform: translateX(400px); }
     aside iframe {
-      position: static;
       width: 400px; height: 100vh;
-      border: 0;
-      background: transparent;
-      opacity: 1;
-      visibility: visible;
-      overflow: hidden;
     }
   </style>
 
-  <article>
+  <section>
     <img id="capture" />
-    <div id="overlay"></div>
-
-    <div id="details">
-      <input type="text" id="name" />
-      <input type="text" id="url" />
-    </div>
-  </article>
+    <iframe id="details" frameborder="0" allowtransparency="true"></iframe>
+  </section>
 
   <aside>
-    <iframe frameborder="0"></iframe>
+    <iframe id="sidebar" frameborder="0"></iframe>
   </aside>
 </template>
 

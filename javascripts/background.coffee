@@ -1,33 +1,36 @@
+bettrlink = 'window.BettrLink'
+
 #######################################
 # Browser Action
 #######################################
 
 chrome.browserAction.onClicked.addListener (tab) ->
-  chrome.tabs.executeScript tab.id, code: 'window.BettrLink===undefined', (result) ->
-    if result[0]
-      # Inject javascripts
-      chrome.tabs.executeScript null, file: 'javascripts/lib/jquery-2.1.4.min.js'
-      chrome.tabs.executeScript null, file: 'javascripts/lib/velocity.min.js'
-      chrome.tabs.executeScript null, file: 'javascripts/lib/vibrant.min.js'
-      chrome.tabs.executeScript null, file: 'javascripts/bettrlink.js'
-    else
-      # BettrLink is already loaded, just toggle sidebar
-      chrome.tabs.executeScript null, code: 'window.BettrLink.toggle()'
+  injectCode "#{bettrlink}!=null", (isLoaded) ->
+    return toggleUI() if isLoaded[0]
+    injectFile 'javascripts/lib/jquery-2.1.4.min.js'
+    injectFile 'javascripts/lib/velocity.min.js'
+    injectFile 'javascripts/lib/vibrant.min.js'
+    injectFile 'javascripts/bettrlink.js', ->
+      toggleUI()
+
+toggleUI = ->
+  injectCode "#{bettrlink}.isActive", (isActive) ->
+    unless isActive[0]
+    then captureTabAndOpen()
+    else injectCode "#{bettrlink}.close()"
 
 #######################################
-# Message Passing
+# Utility
 #######################################
 
-chrome.runtime.onMessage.addListener (request, sender, sendResponse) ->
-  console.log "request: ", request
-  console.log "sender: ", sender
-  console.log "sendResponse: ", sendResponse
+injectFile = (file, callback) ->
+  chrome.tabs.executeScript null, file: file, (result) ->
+    callback(result) if callback?
 
-  switch request
-    when 'captureVisibleTab'
-      chrome.tabs.captureVisibleTab null, format: 'jpeg', quality: 80, (dataURI) ->
-        sendResponse dataURI
-    when 'openUI'
-      console.log "open it!"
+injectCode = (code, callback) ->
+  chrome.tabs.executeScript null, code: code, (result) ->
+    callback(result) if callback?
 
-  return true  # required to be asynchronous
+captureTabAndOpen = ->
+  chrome.tabs.captureVisibleTab null, format: 'jpeg', quality: 80, (dataURI) ->
+    injectCode "#{bettrlink}.open('#{dataURI}')"

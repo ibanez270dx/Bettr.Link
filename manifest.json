@@ -38,8 +38,8 @@
     "javascripts/lib/jquery-2.1.4.min.js",
     "javascripts/bettrlink.js",
     "javascripts/components.js",
-    "stylesheets/injected.css",
     "views/components.html",
-    "views/index.html"
+    "views/details/index.html",
+    "views/sidebar/index.html"
   ]
 }
