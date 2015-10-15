@@ -5,19 +5,25 @@ bettrlink = 'window.BettrLink'
 #######################################
 
 chrome.browserAction.onClicked.addListener (tab) ->
-  injectCode "#{bettrlink}!=null", (isLoaded) ->
+  injectCode "document.querySelector('bettrlink-ui')!=null", (isLoaded) ->
     return toggleUI() if isLoaded[0]
     injectFile 'javascripts/lib/jquery-2.1.4.min.js'
     injectFile 'javascripts/lib/velocity.min.js'
     injectFile 'javascripts/lib/vibrant.min.js'
-    injectFile 'javascripts/bettrlink.js', ->
-      toggleUI()
+    injectFile 'javascripts/bettrlink.js'
 
 toggleUI = ->
   injectCode "#{bettrlink}.isActive", (isActive) ->
     unless isActive[0]
     then captureTabAndOpen()
     else injectCode "#{bettrlink}.close()"
+
+#######################################
+# Messages
+#######################################
+
+chrome.runtime.onMessage.addListener (request) ->
+  captureTabAndOpen() if request is 'captureTabAndOpen'
 
 #######################################
 # Utility

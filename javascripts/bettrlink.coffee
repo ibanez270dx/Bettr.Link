@@ -2,7 +2,7 @@
 @BettrLink =
   isReady: false
   isActive: false
-  injected: false
+  isRegistered: false
   shadowDOM: 'bettrlink-ui::shadow'
 
   ### Helpers ######################################
@@ -26,7 +26,7 @@
   open: (capture) ->
     @capture().attr('src', capture)
     @details().container.velocity { opacity: 1 },
-      duration: 500, display: 'block', begin: =>
+      duration: 650, display: 'block', begin: =>
         $('html').css overflow: 'hidden'
     @sidebar().container.velocity { translateX: ["0px","400px"] },
       duration: 435, easing: [0.175, 0.885, 0.32, 1.275]
@@ -43,21 +43,22 @@
   ### Web Components ###############################
 
   injectComponents: ->
-    $('head').append """<link rel="import" href="#{@getView('components')}">"""
+    $('body').append "<bettrlink-ui></bettrlink-ui>"
+    $('head').append "<link rel='import' href='#{@getView('components')}'>"
 
   attachComponents: ->
     @details().iframe.attr 'src', @getView('details/index')
     @sidebar().iframe.attr 'src', @getView('sidebar/index')
+    chrome.runtime.sendMessage 'captureTabAndOpen'
 
 ####################################################
 #  Messages
 ####################################################
 
 window.addEventListener 'BettrLinkAttached', (event) ->
-  @BettrLink.attachComponents()
-
-window.addEventListener 'BettrLinkDetached', (event) ->
-  @BettrLink.isReady = false
+  unless @BettrLink.isRegistered
+    @BettrLink.attachComponents()
+    @BettrLink.isRegistered = true
 
 ####################################################
 #  Initialize
