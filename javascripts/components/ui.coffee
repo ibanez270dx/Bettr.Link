@@ -1,6 +1,6 @@
-
-@BettrLink =
-  isReady: false
+@BettrLink ||= {}
+@BettrLink.UI =
+  BettrLink: this.BettrLink
   isActive: false
   isRegistered: false
   shadowDOM: 'bettrlink-ui::shadow'
@@ -50,23 +50,3 @@
     @details().iframe.attr 'src', @getView('details/index')
     @sidebar().iframe.attr 'src', @getView('sidebar/index')
     chrome.runtime.sendMessage 'captureTabAndOpen'
-
-####################################################
-#  Messages
-####################################################
-
-window.addEventListener 'BettrLinkAttached', (event) ->
-  unless @BettrLink.isRegistered
-    @BettrLink.attachComponents()
-    @BettrLink.isRegistered = true
-
-####################################################
-#  Initialize
-####################################################
-
-initialize = =>
-  if @jQuery? and @jQuery.Velocity? and @Vibrant?
-  then @BettrLink.injectComponents()
-  else setTimeout 'initialize()', 10
-
-initialize()

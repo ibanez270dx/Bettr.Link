@@ -10,13 +10,15 @@ chrome.browserAction.onClicked.addListener (tab) ->
     injectFile 'javascripts/lib/jquery-2.1.4.min.js'
     injectFile 'javascripts/lib/velocity.min.js'
     injectFile 'javascripts/lib/vibrant.min.js'
-    injectFile 'javascripts/bettrlink.js'
+    injectFile 'javascripts/components/parser.js'
+    injectFile 'javascripts/components/ui.js'
+    injectFile 'javascripts/init.js'
 
 toggleUI = ->
-  injectCode "#{bettrlink}.isActive", (isActive) ->
+  injectCode "#{bettrlink}.UI.isActive", (isActive) ->
     unless isActive[0]
     then captureTabAndOpen()
-    else injectCode "#{bettrlink}.close()"
+    else injectCode "#{bettrlink}.UI.close()"
 
 #######################################
 # Messages
@@ -39,4 +41,4 @@ injectCode = (code, callback) ->
 
 captureTabAndOpen = ->
   chrome.tabs.captureVisibleTab null, format: 'jpeg', quality: 80, (dataURI) ->
-    injectCode "#{bettrlink}.open('#{dataURI}')"
+    injectCode "#{bettrlink}.UI.open('#{dataURI}')"
