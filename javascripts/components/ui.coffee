@@ -19,7 +19,7 @@
     iframe: $("#{@shadowDOM} aside iframe")
 
   getView: (view) ->
-    chrome.extension.getURL("views/#{view}.html")
+    chrome.extension.getURL "views/#{view}.html"
 
   ### Controls #####################################
 

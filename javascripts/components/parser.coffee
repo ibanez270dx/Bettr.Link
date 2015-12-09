@@ -4,20 +4,24 @@
   promises: {}
 
   scrape: ->
+    # @_metatags()
+
     $.when(@_globals(), @_headers(), @_location()).then (g, h, l) =>
       console.log " => globals: ", g
       console.log " => headers: ", h
       console.log " => location: ", l
 
   setGlobals: (data) ->
-    @promises.globals.resolve(JSON.parse(data))
+    console.log "setGlobals: ", data
+    console.log "circular? ", CircularJSON.parse(data)
+    @promises.globals.resolve(CircularJSON.parse(data))
 
   ##############################################################################
 
   _globals: ->
     @promises.globals = (deferred = $.Deferred())
-    path = chrome.extension.getURL "javascripts/views/window.js"
-    $('head').append $("<script src='#{path}'></script>")
+    url = chrome.extension.getURL "javascripts/views/window.js"
+    $('head').append $("<script src='#{url}'></script>")
     deferred.promise()
 
   _headers: ->
@@ -41,6 +45,22 @@
       search: location.search
       hash: location.hash
     ).promise()
+
+  _metatags: ->
+    console.log "parse!"
+    result =
+      site: @getMeta('site')
+      type: @getMeta('type')
+      category: @getMeta('category')
+      title: @getMeta('title')
+      description: @getMeta('description')
+      keywords: @getMeta('keywords')
+      icon: @getMeta('icon')
+      image: @getMeta('image')
+      author: @getMeta('author')
+      published: @getMeta('published')
+      url: @getMeta('url')
+      # analysis: @analyzeText($('body').text())
 
   ##############################################################################
 
@@ -88,6 +108,12 @@
     "who's","whom","why","why's","with","won't","would","wouldn't","you","you'd","you'll","you're",
     "you've","your","yours","yourself","yourselves"]
 
+  visibleText: ->
+    $.map(window.contents(), (element) ->
+      return $(element).text() if element.nodeType == 3
+      return $(element).visibleText() if $(element).is(':visible')
+    ).join ''
+
   # textWords: (text) ->
   #   words = text.match(/[a-zA-Z\-]+/g)
   #   if words?
@@ -130,19 +156,3 @@
   #   used = @sortedListOfWords(frequencies)
   #   topTen = @topTenWords(frequencies)
   #   return topTen
-
-  # parse: ->
-  #   console.log "parse!"
-  #   result =
-  #     site: @getMeta('site')
-  #     type: @getMeta('type')
-  #     category: @getMeta('category')
-  #     title: @getMeta('title')
-  #     description: @getMeta('description')
-  #     keywords: @getMeta('keywords')
-  #     icon: @getMeta('icon')
-  #     image: @getMeta('image')
-  #     author: @getMeta('author')
-  #     published: @getMeta('published')
-  #     url: @getMeta('url')
-  #     # analysis: @analyzeText($('body').text())
