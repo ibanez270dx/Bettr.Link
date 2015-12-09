@@ -36,6 +36,7 @@
 
   "web_accessible_resources": [
     "javascripts/lib/jquery-2.1.4.min.js",
+    "javascripts/lib/circular-json.min.js",
     "javascripts/components/parser.js",
     "javascripts/views/components.js",
     "javascripts/views/details.js",

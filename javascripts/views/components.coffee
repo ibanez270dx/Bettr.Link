@@ -1,7 +1,9 @@
 # Reference Imported DOM (components.html)
 importDoc = document.currentScript.ownerDocument
 
+##################################################
 # Configure & register BettrLink UI element
+##################################################
 document.registerElement 'bettrlink-ui',
   prototype: Object.create HTMLElement.prototype,
     createdCallback: value: ->
@@ -9,4 +11,4 @@ document.registerElement 'bettrlink-ui',
       imported = document.importNode template.content, true
       @createShadowRoot().appendChild imported
     attachedCallback: value: ->
-      window.dispatchEvent new CustomEvent 'BettrLinkAttached'
+      window.dispatchEvent new CustomEvent 'BettrLink::Attached'
