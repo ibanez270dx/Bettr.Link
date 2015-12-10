@@ -10,10 +10,12 @@ chrome.browserAction.onClicked.addListener (tab) ->
     injectFile 'javascripts/lib/jquery-2.1.4.min.js'
     injectFile 'javascripts/lib/velocity.min.js'
     injectFile 'javascripts/lib/vibrant.min.js'
+
+    injectFile 'javascripts/components/helpers.js'
+    injectFile 'javascripts/components/ui.js'
+
     injectFile 'javascripts/lib/circular-json.min.js'
     injectFile 'javascripts/components/parser.js'
-    injectFile 'javascripts/components/ui.js'
-    injectFile 'javascripts/bettrlink.js'
 
 toggleUI = ->
   injectCode "#{bettrlink}.UI.isActive", (isActive) ->
