@@ -1,9 +1,13 @@
-@BettrLink ||= {}
-@BettrLink.UI =
-  BettrLink: this.BettrLink
+class UI
   isActive: false
-  isRegistered: false
   shadowDOM: 'bettrlink-ui::shadow'
+
+  constructor: ->
+    window.addEventListener 'BettrLink::Attached', =>
+      @attachComponents()
+
+    window.waitFor ['jquery','velocity','vibrant'], =>
+      @injectComponents()
 
   ### Helpers ######################################
 
@@ -50,3 +54,10 @@
     @details().iframe.attr 'src', @getView('details/index')
     @sidebar().iframe.attr 'src', @getView('sidebar/index')
     chrome.runtime.sendMessage 'captureTabAndOpen'
+
+####################################################
+# Initialize
+####################################################
+
+@BettrLink ||= {}
+@BettrLink.UI = new UI()
