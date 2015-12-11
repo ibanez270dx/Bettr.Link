@@ -10,11 +10,9 @@ chrome.browserAction.onClicked.addListener (tab) ->
     injectFile 'javascripts/lib/jquery-2.1.4.min.js'
     injectFile 'javascripts/lib/velocity.min.js'
     injectFile 'javascripts/lib/vibrant.min.js'
-
+    injectFile 'javascripts/lib/circular-json.min.js'
     injectFile 'javascripts/components/helpers.js'
     injectFile 'javascripts/components/ui.js'
-
-    injectFile 'javascripts/lib/circular-json.min.js'
     injectFile 'javascripts/components/parser.js'
 
 toggleUI = ->
@@ -27,8 +25,10 @@ toggleUI = ->
 # Messages
 #######################################
 
-chrome.runtime.onMessage.addListener (request) ->
-  captureTabAndOpen() if request is 'captureTabAndOpen'
+chrome.runtime.onMessage.addListener (message) ->
+  switch message.event
+    when 'captureTabAndOpen' then captureTabAndOpen()
+    when 'processDetails'    then processDetails(message)
 
 #######################################
 # Utility
@@ -45,3 +45,7 @@ injectCode = (code, callback) ->
 captureTabAndOpen = ->
   chrome.tabs.captureVisibleTab null, format: 'jpeg', quality: 80, (dataURI) ->
     injectCode "#{bettrlink}.UI.open('#{dataURI}')"
+
+processDetails = (data) ->
+  chrome.tabs.getSelected null, (tab) ->
+    chrome.tabs.sendMessage(tab.id, data) if tab

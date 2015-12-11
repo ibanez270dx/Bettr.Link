@@ -1,0 +1,47 @@
+
+.wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+
+  position: absolute;
+  top: 0; right: 400px; bottom: 0px; left: 0px;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 90%;
+
+  #thumbnail {
+    max-width: 200px;
+    width: 200px; height: 200px;
+    background-size: cover;
+  }
+
+  #title {
+    padding-left: 1em;
+    input:first-child {
+      font-size: 4em;
+    }
+  }
+
+  #thumbnail, #title {
+    flex: 1 1 0;
+  }
+}
+
+section {
+  width: 100%;
+}
+
+input {
+  display: block;
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 2em;
+}

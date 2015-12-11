@@ -10,3 +10,6 @@
   if loaded.indexOf(false) >= 0
   then setTimeout (-> waitFor(variables, callback)), 10
   else callback()
+
+@trigger = (event, data) ->
+  chrome.runtime.sendMessage { event: event, data: data }

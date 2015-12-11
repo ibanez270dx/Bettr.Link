@@ -1,6 +1,5 @@
 class UI
   isActive: false
-  shadowDOM: 'bettrlink-ui::shadow'
 
   constructor: ->
     window.addEventListener 'BettrLink::Attached', =>
@@ -11,16 +10,19 @@ class UI
 
   ### Helpers ######################################
 
+  shadowDOM: ->
+    $(document.querySelector('bettrlink-ui').shadowRoot)
+
   capture: ->
-    $("#{@shadowDOM} #capture")
+    @shadowDOM().find "#capture"
 
   details: ->
-    container: $("#{@shadowDOM} section")
-    iframe: $("#{@shadowDOM} section iframe")
+    container: @shadowDOM().find('section')
+    iframe: @shadowDOM().find('section iframe')
 
   sidebar: ->
-    container: $("#{@shadowDOM} aside")
-    iframe: $("#{@shadowDOM} aside iframe")
+    container: @shadowDOM().find('aside')
+    iframe: @shadowDOM().find('aside iframe')
 
   getView: (view) ->
     chrome.extension.getURL "views/#{view}.html"
@@ -53,7 +55,7 @@ class UI
   attachComponents: ->
     @details().iframe.attr 'src', @getView('details/index')
     @sidebar().iframe.attr 'src', @getView('sidebar/index')
-    chrome.runtime.sendMessage 'captureTabAndOpen'
+    window.trigger 'captureTabAndOpen'
 
 ####################################################
 # Initialize
