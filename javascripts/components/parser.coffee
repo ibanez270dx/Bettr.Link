@@ -43,6 +43,7 @@ class Parser
     image: @getMeta('image')
     author: @getMeta('author')
     published: @getMeta('published')
+    url: document.location.toString()
 
   ##############################################################################
 

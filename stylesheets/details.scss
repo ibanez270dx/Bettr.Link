@@ -4,7 +4,6 @@
   align-items: center;
   justify-content: center;
   flex-direction: column;
-
   position: absolute;
   top: 0; right: 400px; bottom: 0px; left: 0px;
 }
@@ -16,19 +15,18 @@ header {
   width: 90%;
 
   #thumbnail {
+    margin: 0;
     max-width: 200px;
     width: 200px; height: 200px;
     background-size: cover;
   }
 
-  #title {
+  #details {
     padding-left: 1em;
-    input:first-child {
-      font-size: 4em;
-    }
+    [name="title"] { font-size: 4em; }
   }
 
-  #thumbnail, #title {
+  #thumbnail, #details {
     flex: 1 1 0;
   }
 }
@@ -37,11 +35,22 @@ section {
   width: 100%;
 }
 
-input {
+input, textarea {
   display: block;
   width: 100%;
   background: transparent;
   border: none;
   color: #fff;
   font-size: 2em;
+
+  &:focus {
+    outline-style: solid;
+    outline-width: 2px;
+  }
+}
+
+textarea {
+  box-sizing: border-box;
+  min-height: 1em;
+  overflow-x: hidden; /* for Firefox (issue #5) */
 }

@@ -3,18 +3,21 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
     <link rel="stylesheet" media="all" href="../../stylesheets/details.css" />
     <script src="../../javascripts/lib/jquery-2.1.4.min.js"></script>
+    <script src="../../javascripts/lib/jquery.textarea-autosize.min.js"></script>
+    <script src="../../javascripts/components/helpers.js"></script>
     <script src="../../javascripts/views/details.js"></script>
   </head>
   <body>
     <div class="wrapper">
 
       <header>
-        <div id="thumbnail"
-          style="background-image:url(https://www.filepicker.io/api/file/9Czj1DnESYa17sf5Kw8i);">
-        </div>
-        <div id="title">
-          <input type="text" name="title" value="Building a Blogging Engine" />
-          <input type="text" id="url" value="http://humani.se/blog/building-a-blogging-engine" />
+        <figure id="thumbnail" style=
+          "background-image:url(https://www.filepicker.io/api/file/9Czj1DnESYa17sf5Kw8i);">
+        </figure>
+        <div id="details">
+          <textarea name="title" rows="1"></textarea>
+          <input type="text" name="url" />
+          <textarea name="description"></textarea>
         </div>
       </header>
 
