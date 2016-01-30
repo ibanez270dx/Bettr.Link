@@ -30,7 +30,7 @@
   },
 
   "background": {
-    "scripts": ["javascripts/background.js"],
+    "scripts": ["javascripts/background.js","javascripts/lib/jquery-2.1.4.min.js"],
     "persistent": false
   },
 
